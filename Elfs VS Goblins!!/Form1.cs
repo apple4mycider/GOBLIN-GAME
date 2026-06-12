@@ -14,8 +14,6 @@ namespace Elfs_VS_Goblins__
     {
         Random rand;
         List <Enemy> Chudovishta;
-             
-        
         public class Enemy
         {
             public int Speed ;
