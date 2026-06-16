@@ -246,6 +246,7 @@ namespace Elfs_VS_Goblins__
                         Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 60, Igrach.Pic.Location.Y + 70 - j * 15);
                         if (Chudovishta[i].Health == 0)
                         {
+                            Igrach.XP += Chudovishta[i].XP;
                             Chudovishta[i].Pic.Location = new Point(50, -100);
                             Chudovishta[i].Health = Chudovishta[i].MaxHealth;
                         }
@@ -256,6 +257,7 @@ namespace Elfs_VS_Goblins__
                 if (Igrach.Pic.Bounds.IntersectsWith(Chudovishta[i].Pic.Bounds))
                 {
                     Igrach.Health--;
+                    Igrach.Pic.Location = new Point(200, 300);
                     if(Igrach.Health == 0)
                         Igrach.Pic.Visible = false;
                 }
