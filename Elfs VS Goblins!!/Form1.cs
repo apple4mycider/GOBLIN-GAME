@@ -31,6 +31,7 @@ namespace Elfs_VS_Goblins__
         public class Enemy
         {
             public int Speed ;
+            public int MaxHealth;
             public int Health ;
             public PictureBox Pic;
             protected int x;
@@ -49,7 +50,8 @@ namespace Elfs_VS_Goblins__
             {
                 x = 80;
                 y = 80;
-                Health = 2;
+                MaxHealth = 4;
+                Health = 4;
                 Speed = 2;
                 Pic = new PictureBox();
                 Pic.Location = new Point(a, b);
@@ -64,6 +66,7 @@ namespace Elfs_VS_Goblins__
                 /*
                 x = ;
                 y = ;
+                MaxHealth = ;
                 Health = ;
                 Speed = ;
                 Pic = new PictureBox();
@@ -80,6 +83,7 @@ namespace Elfs_VS_Goblins__
                 /*
                 x = ;
                 y = ;
+                MaxHealth = ;
                 Health = ;
                 Speed = ;
                 Pic = new PictureBox();
@@ -91,10 +95,12 @@ namespace Elfs_VS_Goblins__
         }
         public class Elf
         {
-            public int Health = 1;
+            public int MaxHealth = 2;
+            public int Health = 2;
             public PictureBox Pic;
             public int speed = 4;
             public int ShootingSpeed;
+            public int XP;
         }
         Elf Igrach = new Elf();
 
@@ -211,34 +217,47 @@ namespace Elfs_VS_Goblins__
                 {
                     Magiya[i].Pic.Visible = true;
                     Magiya[i].Pic.Top -= Magiya[i].speed;
-
-                    Collisions();
-                    if(!Igrach.Pic.Visible)
-                    {
-                        GameStop();
-                    }
+                
+                
                 }
                 else
                 {
                     Magiya[i].Pic.Visible = false;
-                    Magiya[i].Pic.Location = new Point(Igrach.Pic.Location.X+60, Igrach.Pic.Location.Y +70-i*15);
+                    Magiya[i].Pic.Location = new Point(Igrach.Pic.Location.X + 60, Igrach.Pic.Location.Y + 70 - i * 15);
                 }
             }
+            Collisions();
+            if (!Igrach.Pic.Visible)
+            {
+                GameStop();
+            }
         }
+
         private void Collisions()
         {
             for(int i = 0;i<Chudovishta.Length;i++)
             {
-                for(int j = 0; j<Magiya.Length;j++)
+                for (int j=0; j<Magiya.Length; j++)
                 {
-                    if (Magiya[j].Pic.Bounds.IntersectsWith(Chudovishta[i].Pic.Bounds))
+                    if (Magiya[i].Pic.Visible &&Magiya[j].Pic.Bounds.IntersectsWith(Chudovishta[i].Pic.Bounds))
                     {
-                        Chudovishta[i].Pic.Location = new Point(50, -100);
+                        Chudovishta[i].Health--;
+                        Magiya[j].Pic.Visible = false;
+                        Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 60, Igrach.Pic.Location.Y + 70 - j * 15);
+                        if (Chudovishta[i].Health == 0)
+                        {
+                            Chudovishta[i].Pic.Location = new Point(50, -100);
+                            Chudovishta[i].Health = Chudovishta[i].MaxHealth;
+                        }
+                        break;
                     }
+
                 }
                 if (Igrach.Pic.Bounds.IntersectsWith(Chudovishta[i].Pic.Bounds))
                 {
-                    Igrach.Pic.Visible = false;
+                    Igrach.Health--;
+                    if(Igrach.Health == 0)
+                        Igrach.Pic.Visible = false;
                 }
             }
         }
