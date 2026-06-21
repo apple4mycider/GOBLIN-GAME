@@ -63,6 +63,26 @@ namespace Elfs_VS_Goblins__.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _5heart {
+            get {
+                object obj = ResourceManager.GetObject("5heart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Controls {
+            get {
+                object obj = ResourceManager.GetObject("Controls", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap melf_wand {
             get {
                 object obj = ResourceManager.GetObject("melf-wand", resourceCulture);
