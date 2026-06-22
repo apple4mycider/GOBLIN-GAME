@@ -6,6 +6,7 @@ using System.Data.SqlTypes;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,18 +18,22 @@ namespace Elfs_VS_Goblins__
         Random rand = new Random();
         ElfProjectile[] Magiya;
         int CoolDown = 0;
+        PictureBox[]Surca = new PictureBox[5];
 
         bool stoped = false;
         bool over = false;
 
+        PictureBox Wizard = new PictureBox();
         PictureBox Bow = new PictureBox();
+        PictureBox Staff = new PictureBox();
         Elf Igrach = new Elf();
 
+        int SceneBreak = 0;
         int level = -2;
         bool LevelEnded = false;
 
-        PictureBox Wizard = new PictureBox();
-        Label WizardSpeak = new Label();
+        PictureBox WizardTalk = new PictureBox();
+        System.Windows.Forms.Label WizardSpeak = new System.Windows.Forms.Label();
         int speak = 0;
 
         List<Enemy> Chudovishta = new List<Enemy>();
@@ -48,11 +53,12 @@ namespace Elfs_VS_Goblins__
         int XPlevel2 = 60; // vremenno
         int XPlevel3;
 
-        Point A  =new Point(20,10);
-        Point B = new Point(120,10);
-        Point C = new Point(220,10);
-        Point D = new Point(320,10);
-        Point E = new Point(420,10);
+        Point Default = new Point(250, 500);
+        Point A  =new Point(50,10);
+        Point B = new Point(150,10);
+        Point C = new Point(250,10);
+        Point D = new Point(350,10);
+        Point E = new Point(450,10);
         public class ElfProjectile// tryabva otdelen za magiya i za streli ; magiyata mazhe da bie poveche?
         {
             public int speed = 10;
@@ -63,7 +69,7 @@ namespace Elfs_VS_Goblins__
             {
                 Pic = new PictureBox();
                 Pic.Size = new Size(x, y);
-                Pic.BackColor = Color.Purple; // tuk shte sa strelite
+                Pic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
         public class GoblinProjectile
@@ -196,54 +202,87 @@ namespace Elfs_VS_Goblins__
         {
             InitializeComponent();
 
-            ElfPic.Image = Image.FromFile("sprites/melf-static.gif");
+            BackgroundAndHearts();
+
+            
+            ElfPic.Image = Image.FromFile("sprites/melf-static2.gif");
             Igrach.Pic = ElfPic;
+            Igrach.Pic.Size = new Size(50, 70);
             Igrach.XP = 0;
             
-            Bow.Location = new Point(200,100);
+            Bow.Location = new Point(250,300);
             Bow.Size = new Size(70,70);
             Bow.SizeMode = PictureBoxSizeMode.StretchImage;
             Bow.Image = Image.FromFile("sprites/bow.gif");
             this.Controls.Add(Bow);
+            Bow.BringToFront();
 
+            Wizard.Location = new Point(340, 220);
+            Wizard.Size = new Size(60, 135);
+            Wizard.SizeMode = PictureBoxSizeMode.StretchImage;
+            Wizard.Image = Image.FromFile("sprites/the wiz.gif");
             this.Controls.Add(Wizard);
-            this.Controls.Add(WizardSpeak);
+            Wizard.BringToFront();
+
+            this.Controls.Add(WizardTalk);
+            WizardTalk.Visible = false;
+            WizardTalk.Parent = Background;
+            WizardTalk.BackColor = Color.Transparent;
+        }
+        private void BackgroundAndHearts()
+        {
+            Surca[0] = Hearts1;
+            Surca[1] = Hearts2;
+            Surca[2] = Hearts3;
+            Surca[3] = Hearts4;
+            Surca[4] = Hearts5;
+            for (int i = 0;i <5; i++)
+            {
+                Surca[i].BackColor = Color.Transparent;
+                Surca[i].Parent = Frame;
+                Surca[i].Image = Image.FromFile("sprites/Heart.png");
+                Surca[i].Visible = true;
+                Surca[i].BringToFront();
+            }
+
+            Frame.BackColor = Color.Transparent;
+            Frame.Parent = Background;
+            Frame.Image = Image.FromFile("sprites/Frame.png");
+            Background.Image = Image.FromFile("sprites/Level1.png");
+        }
+        private void Napred(PictureBox p)
+        {
+            p.BringToFront();
+            Frame.BringToFront();
+            for (int i = 0; i < 5; i++)
+            {
+                Surca[i].BringToFront();
+            }
+            
         }
         private void Nachalo_Tick(object sender, EventArgs e)
         {
             if (Igrach.Pic.Bounds.IntersectsWith(Bow.Bounds)&&level ==-2)
             {
                 Bow.Dispose();
-                Igrach.Pic.Image = Image.FromFile("sprites/melf-bow.gif");
+                Igrach.Pic.Image = Image.FromFile("sprites/melf-bow2.gif");
                 stoped = true;
 
-                Wizard.Size = new Size(500, 200);
-                Wizard.Location = new Point(0, 350);
-                Wizard.SizeMode = PictureBoxSizeMode.StretchImage;
-                Wizard.Image = Image.FromFile("PlaceHolders/Wizard.png");
-                Wizard.BringToFront();
-                Wizard.Visible = true;
-
-                WizardSpeak.Text = "Bla bla bla bla \n Take this bow";
-                WizardSpeak.Location = new Point(50, 450);
-                WizardSpeak.AutoSize = true;
-                WizardSpeak.Font = new Font("Arial", 15);
-                WizardSpeak.BringToFront();
-                WizardSpeak.Visible = true;
+                WizardTalk.Size = new Size(570, 200);
+                WizardTalk.Location = new Point(20, 400);
+                WizardTalk.SizeMode = PictureBoxSizeMode.StretchImage;
+                WizardTalk.Image = Image.FromFile("sprites/wizard1.png");
+                WizardTalk.BringToFront();
+                WizardTalk.Visible = true;
 
                 level++;
             }
-            if ((Igrach.Pic.Top <= -30))
+            if ((Igrach.Pic.Top <= 50)&&level==-1)
             {
-                Igrach.Pic.Location = new Point(200, 450);
-                Controls1.Image = Image.FromFile("PlaceHolders/Controls.png");
-                Controls1.Visible = true;
-                Controls1.BringToFront();
-                stoped = true;
+                Igrach.Pic.Location = Default;
+                GameStart();
                 level++;
             }
-            if ((!Controls1.Visible)&&speak==2&&level==0)
-                GameStart();
         }
 
         private void timer1_Tick(object sender, EventArgs e) //enemies and apples move
@@ -284,7 +323,7 @@ namespace Elfs_VS_Goblins__
 
         private void MoveDown_Tick(object sender, EventArgs e)
         {
-            if (Igrach.Pic.Top < 450)
+            if (Igrach.Pic.Top < 540)
             {
                 Igrach.Pic.Top += Igrach.speed;
             }
@@ -292,7 +331,7 @@ namespace Elfs_VS_Goblins__
 
         private void MoveUp_Tick(object sender, EventArgs e)
         {
-            if (Igrach.Pic.Top > -45)
+            if (Igrach.Pic.Top > 0)
             {
                 Igrach.Pic.Top -= Igrach.speed;
             }
@@ -300,7 +339,7 @@ namespace Elfs_VS_Goblins__
 
         private void MoveRight_Tick(object sender, EventArgs e)
         {
-            if (Igrach.Pic.Right < 535)
+            if (Igrach.Pic.Right < 520)
             {
                 Igrach.Pic.Left += Igrach.speed;
             }
@@ -308,7 +347,7 @@ namespace Elfs_VS_Goblins__
 
         private void MoveLeft_Tick(object sender, EventArgs e)
         {
-            if (Igrach.Pic.Left > -15)
+            if (Igrach.Pic.Left > 50)
             {
                 Igrach.Pic.Left -= Igrach.speed;
             }
@@ -340,27 +379,30 @@ namespace Elfs_VS_Goblins__
             {
                 GameContinue();
             }
-            if (e.KeyCode == Keys.Z && !over)
-            {
-                Controls1.Visible = false;
-            }
             if(e.KeyCode == Keys.Space && !over&&stoped)
             {
-                speak++;
-                if(speak==1)
+                if (WizardTalk.Visible)
                 {
-                    WizardSpeak.Text = "Save the forest\nGood luck!";
+                    speak++;
+                    if (speak == 1)
+                    {
+                        WizardTalk.Image = Image.FromFile("sprites/wizard2.png");
+                    }
+                    else if(speak ==2)
+                    {
+                        WizardTalk.Image = Image.FromFile("sprites/wizard3.png");
+                    }
+                    else if (speak == 3)
+                    {
+                        WizardTalk.Image = Image.FromFile("sprites/wizard4.png");
+                    }
+                    else if (speak == 4)
+                    {
+                        WizardTalk.Visible = false;
+                        Wizard.Dispose();
+                        stoped = false;
+                    }
                 }
-                else if(speak==2)
-                {
-                    WizardSpeak.Visible =false;
-                    Wizard.Visible = false;
-                    stoped = false;
-                }
-
-                // tuk tryabva da se dobavi i picture box koito obyasnyava kak se dvizhat chudovishtata i kak atakuvat
-                // s Pravila i oshte if - ove 
-
             }
         }
 
@@ -392,16 +434,28 @@ namespace Elfs_VS_Goblins__
                 {
                     Magiya[i].Pic.Visible = true;
                     Magiya[i].Pic.Top -= Magiya[i].speed;
-
-
                 }
                 else
                 {
                     Magiya[i].Pic.Visible = false;
-                    Magiya[i].Pic.Location = new Point(Igrach.Pic.Location.X + 60, Igrach.Pic.Location.Y + 70 - i * 15);
+                    int a = rand.Next(0,3);
+                    switch(a)
+                    {
+                        case 0:
+                            Magiya[i].Pic.Image = Image.FromFile("sprites/arrow1.png");
+                            break;
+                        case 1:
+                            Magiya[i].Pic.Image = Image.FromFile("sprites/arrow2.png");
+                            break;
+                        case 2:
+                            Magiya[i].Pic.Image = Image.FromFile("sprites/arrow3.png");
+                            break;
+                    }
+                    Magiya[i].Pic.Location = new Point(Igrach.Pic.Location.X + 20, Igrach.Pic.Location.Y + 45 - i * 10);
                 }
             }
             Collisions();
+            StaffScene();
             CoolDown++;
             if(CoolDown>10)
                 CollisionsElf();
@@ -440,8 +494,9 @@ namespace Elfs_VS_Goblins__
             {
                 int j = rand.Next(0, Goblini.Count);
                 var x = new GoblinProjectile();
-                x.Pic.Location = new Point(Goblini[j].Pic.Location.X + 35, Goblini[j].Pic.Location.Y + 80);
+                x.Pic.Location = new Point(Goblini[j].Pic.Location.X + 20, Goblini[j].Pic.Location.Y + 80);
                 this.Controls.Add(x.Pic);
+                Napred(x.Pic);
                 Kamuni.Add(x);
             }
         }
@@ -453,6 +508,7 @@ namespace Elfs_VS_Goblins__
                 var x = new DemonProjectile();
                 x.Pic.Location = new Point(Demoni[k].Pic.Location.X + 35, Demoni[k].Pic.Location.Y + 80);
                 this.Controls.Add(x.Pic);
+                Napred(x.Pic);
                 Ogun.Add(x);
             }
         }
@@ -468,7 +524,7 @@ namespace Elfs_VS_Goblins__
                     {
                         g.Health--;
                         Magiya[j].Pic.Visible = false;
-                        Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 60, Igrach.Pic.Location.Y + 70 - j * 15);
+                        Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 25, Igrach.Pic.Location.Y + 45 - j * 10);
                         if (g.Health == 0)
                         {
                             Igrach.XP += g.XP;
@@ -487,7 +543,7 @@ namespace Elfs_VS_Goblins__
                     {
                         d.Health--;
                         Magiya[j].Pic.Visible = false;
-                        Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 60, Igrach.Pic.Location.Y + 70 - j * 15);
+                        Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 25, Igrach.Pic.Location.Y + 45 - j * 10);
                         if (d.Health == 0)
                         {
                             Igrach.XP += d.XP;
@@ -506,7 +562,7 @@ namespace Elfs_VS_Goblins__
                     {
                         t.Health--;
                         Magiya[j].Pic.Visible = false;
-                        Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 60, Igrach.Pic.Location.Y + 70 - j * 15);
+                        Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 25, Igrach.Pic.Location.Y + 45 - j * 10);
                         if (t.Health == 0)
                         {
                             Igrach.XP += t.XP;
@@ -545,7 +601,7 @@ namespace Elfs_VS_Goblins__
                     Igrach.Health--;
                     HeartUpdate();
                     CoolDown = 0;
-                    Igrach.Pic.Location = new Point(200, 450);
+                    Igrach.Pic.Location = Default;
                     if (Igrach.Health == 0)
                     {
                         over = true;
@@ -560,7 +616,7 @@ namespace Elfs_VS_Goblins__
                     Igrach.Health--;
                     HeartUpdate();
                     CoolDown = 0;
-                    Igrach.Pic.Location = new Point(200, 450);
+                    Igrach.Pic.Location = Default;
                     if (Igrach.Health == 0)
                     {
                         over = true;
@@ -575,7 +631,7 @@ namespace Elfs_VS_Goblins__
                     Igrach.Health--;
                     HeartUpdate();
                     CoolDown = 0;
-                    Igrach.Pic.Location = new Point(200, 450);
+                    Igrach.Pic.Location = Default;
                     if (Igrach.Health == 0)
                     {
                         over = true;
@@ -598,9 +654,6 @@ namespace Elfs_VS_Goblins__
             label2.Visible = true;
             label3.Text = level.ToString();
             label3.Visible = true;
-            Hearts.Visible = true;
-            label1.Visible = true;
-            XPbar.Visible = true;
 
             Magiya = new ElfProjectile[3];
             for (int i = 0; i < 3; i++)
@@ -608,6 +661,19 @@ namespace Elfs_VS_Goblins__
                 Magiya[i] = new ElfProjectile();
                 this.Controls.Add(Magiya[i].Pic);
                 Magiya[i].Pic.BringToFront();
+                int a = rand.Next(0, 3);
+                switch (a)
+                {
+                    case 0:
+                        Magiya[i].Pic.Image = Image.FromFile("sprites/arrow1.png");
+                        break;
+                    case 1:
+                        Magiya[i].Pic.Image = Image.FromFile("sprites/arrow2.png");
+                        break;
+                    case 2:
+                        Magiya[i].Pic.Image = Image.FromFile("sprites/arrow3.png");
+                        break;
+                }
             }
 
         }
@@ -661,6 +727,10 @@ namespace Elfs_VS_Goblins__
                     }
                 }
             }
+            else if (level == 3)
+            {
+
+            }
         }
         private void Type1(Point P) //nivo 1
         {
@@ -673,12 +743,15 @@ namespace Elfs_VS_Goblins__
                 case 4:
                     var g = new Goblin(P.X, P.Y);
                     this.Controls.Add(g.Pic);
+                    g.Pic.Image = Image.FromFile("PlaceHolders/Goblin.png");
+                    Napred(g.Pic);
                     Chudovishta.Add(g);
                     Goblini.Add(g);
                     break;
                 case 5:
                     var t = new Tank(P.X, P.Y);
                     this.Controls.Add(t.Pic);
+                    Napred(t.Pic);
                     Chudovishta.Add(t);
                     Tankove.Add(t);
                     TankoveDeathLine.Add(t);
@@ -687,12 +760,14 @@ namespace Elfs_VS_Goblins__
                 case 7:
                     var d = new Demon(P.X, P.Y);
                     this.Controls.Add(d.Pic);
+                    Napred(d.Pic);
                     Chudovishta.Add(d);
                     Demoni.Add(d);
                     break;
                 case 8:
                     var ap = new Apple(P.X, P.Y);
                     this.Controls.Add(ap.Pic);
+                    Napred(ap.Pic);
                     Yabulki.Add(ap);
                     break;
             }
@@ -708,29 +783,82 @@ namespace Elfs_VS_Goblins__
                 case 3:
                 case 4:
                     var g = new Goblin(P.X, P.Y);
-                    this.Controls.Add(g.Pic);
+                    g.Pic.Image = Image.FromFile("sprites/foxy.gif");
                     Chudovishta.Add(g);
                     Goblini.Add(g);
+                    this.Controls.Add(g.Pic);
+                    Napred(g.Pic);
                     break;
                 case 5:
                     var t = new Tank(P.X, P.Y);
-                    this.Controls.Add(t.Pic);
+                    // kartinka
                     Chudovishta.Add(t);
                     Tankove.Add(t);
                     TankoveDeathLine.Add(t);
+                    this.Controls.Add(t.Pic);
+                    Napred(t.Pic);
                     break;
                 case 6:
                 case 7:
                 case 8:
                     var d = new Demon(P.X, P.Y);
-                    this.Controls.Add(d.Pic);
+                    // kartinka
                     Chudovishta.Add(d);
                     Demoni.Add(d);
+                    this.Controls.Add(d.Pic);
+                    Napred(d.Pic);
                     break;
                 case 9:
                     var ap = new Apple(P.X, P.Y);
-                    this.Controls.Add(ap.Pic);
+                    // kartinka
                     Yabulki.Add(ap);
+                    this.Controls.Add(ap.Pic);
+                    Napred(ap.Pic);
+                    break;
+            }
+        }
+        private void Type3 (Point P) // v momenta e sushtoto kato 2 i ne e izpolzvano
+        {
+            int a = rand.Next(0, 10); // mozhe da se promeni ratio-to
+            switch (a)
+            {
+                // 0  prazni
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    var g = new Goblin(P.X, P.Y);
+                    g.Pic.Image = Image.FromFile("sprites/foxy.gif");
+                    Chudovishta.Add(g);
+                    Goblini.Add(g);
+                    this.Controls.Add(g.Pic);
+                    Napred(g.Pic);
+                    break;
+                case 5:
+                    var t = new Tank(P.X, P.Y);
+                    // kartinka
+                    Chudovishta.Add(t);
+                    Tankove.Add(t);
+                    TankoveDeathLine.Add(t);
+                    this.Controls.Add(t.Pic);
+                    Napred(t.Pic);
+                    break;
+                case 6:
+                case 7:
+                case 8:
+                    var d = new Demon(P.X, P.Y);
+                    // kartinka
+                    Chudovishta.Add(d);
+                    Demoni.Add(d);
+                    this.Controls.Add(d.Pic);
+                    Napred(d.Pic);
+                    break;
+                case 9:
+                    var ap = new Apple(P.X, P.Y);
+                    // kartinka
+                    Yabulki.Add(ap);
+                    this.Controls.Add(ap.Pic);
+                    Napred(ap.Pic);
                     break;
             }
         }
@@ -782,22 +910,46 @@ namespace Elfs_VS_Goblins__
             switch (Igrach.Health)
             {
                 case 5:
-                    Hearts.Image = Image.FromFile("PlaceHolders/5heart.png");
+                    Hearts1.Visible = true;
+                    Hearts2.Visible = true;
+                    Hearts3.Visible = true;
+                    Hearts4.Visible = true;
+                    Hearts5.Visible = true;
                     break;
                 case 4:
-                    Hearts.Image = Image.FromFile("PlaceHolders/4heart.png");
+                    Hearts1.Visible = true;
+                    Hearts2.Visible = true;
+                    Hearts3.Visible = true;
+                    Hearts4.Visible = true;
+                    Hearts5.Visible = false;
                     break;
                 case 3:
-                    Hearts.Image = Image.FromFile("PlaceHolders/3heart.png");
+                    Hearts1.Visible = true;
+                    Hearts2.Visible = true;
+                    Hearts3.Visible = true;
+                    Hearts4.Visible = false;
+                    Hearts5.Visible = false;
                     break;
                 case 2:
-                    Hearts.Image = Image.FromFile("PlaceHolders/2heart.png");
+                    Hearts1.Visible = true;
+                    Hearts2.Visible = true;
+                    Hearts3.Visible = false;
+                    Hearts4.Visible = false;
+                    Hearts5.Visible = false;
                     break;
                 case 1:
-                    Hearts.Image = Image.FromFile("PlaceHolders/1heart.png");
+                    Hearts1.Visible = true;
+                    Hearts2.Visible = false;
+                    Hearts3.Visible = false;
+                    Hearts4.Visible = false;
+                    Hearts5.Visible = false;
                     break;
                 case 0:
-                    Hearts.Image = Image.FromFile("PlaceHolders/0heart.png");
+                    Hearts1.Visible = false;
+                    Hearts2.Visible = false;
+                    Hearts3.Visible = false;
+                    Hearts4.Visible = false;
+                    Hearts5.Visible = false;
                     break;
             }
         }
@@ -820,16 +972,14 @@ namespace Elfs_VS_Goblins__
                 else
                 {
                     XPbar.Value = 100;
-                    GameWon(); //vremenno 
-                    //EndofLevel();
-                    //kartinka/cvyat 
+                    EndOfLevel();
                     
                 }
             }
             else if(level ==3)
             {
-                if (Igrach.XP < XPlevel2)
-                    XPbar.Value = (Igrach.XP * 100) / XPlevel2;
+                if (Igrach.XP < XPlevel3)
+                    XPbar.Value = (Igrach.XP * 100) / XPlevel3;
                 else
                 {
                     //EndofLevel();
@@ -841,11 +991,52 @@ namespace Elfs_VS_Goblins__
         {
             EnemyCreate.Stop();
             LevelEnded = true;
+            if(level==2&&SceneBreak==0)
+            {
+                SceneBreak = 1;
+            }
+        }
+        private void StaffScene()
+        {
+            if (Chudovishta.Count == 0 && Yabulki.Count == 0&&SceneBreak==1)
+            {
+                ElfProjectileMove.Stop();
+                for (int i = 0;i<Magiya.Length;i++)
+                {
+                    Magiya[i].Pic.Dispose();
+                }
+                MagicStaff.Start();
+                Staff.Location = new Point(200, 100);
+                Staff.Size = new Size(70, 70);
+                Staff.SizeMode = PictureBoxSizeMode.StretchImage;
+                Staff.Image = Image.FromFile("sprites/wand.gif");
+                this.Controls.Add(Staff);
+                Staff.BringToFront();
+            }
+        }
+        private void MagicStaff_Tick(object sender, EventArgs e)
+        {
+
+            if (Igrach.Pic.Bounds.IntersectsWith(Staff.Bounds))
+            {
+                Staff.Dispose();
+                Igrach.Pic.Image = Image.FromFile("sprites/melf-wand2.gif");
+                SceneBreak++;
+            }
+            if (Igrach.Pic.Top <= -30 && SceneBreak == 2)
+            {
+                SceneBreak = 0;
+                Igrach.Pic.Location = Default;
+                ElfProjectileMove.Start();
+                CheckIfLevelEnded();
+            }
+            
         }
         private void CheckIfLevelEnded()
         {
-            if (LevelEnded &&Chudovishta.Count == 0 &&Yabulki.Count == 0)
+            if (LevelEnded &&Chudovishta.Count == 0 &&Yabulki.Count == 0&&SceneBreak==0)
             {
+                MagicStaff.Stop();
                 StartOfLevel();
             }
         }
@@ -859,11 +1050,12 @@ namespace Elfs_VS_Goblins__
             XPbar.Value = 0;
             if(level==2)
             {
+                // + bg image
                 BackColor = Color.PaleTurquoise;
             }
             else if(level==3)
             {
-                // bla bla
+                
             }
         }
 
