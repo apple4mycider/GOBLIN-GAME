@@ -36,7 +36,6 @@
             this.MoveDown = new System.Windows.Forms.Timer(this.components);
             this.ElfProjectileMove = new System.Windows.Forms.Timer(this.components);
             this.Nachalo = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
             this.XPbar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
