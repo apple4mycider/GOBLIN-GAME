@@ -44,24 +44,28 @@
             this.GoblinShoot = new System.Windows.Forms.Timer(this.components);
             this.DemonShoot = new System.Windows.Forms.Timer(this.components);
             this.MagicStaff = new System.Windows.Forms.Timer(this.components);
+            this.WizardEvilScene = new System.Windows.Forms.Timer(this.components);
+            this.WizardShoot = new System.Windows.Forms.Timer(this.components);
+            this.Hearts5 = new System.Windows.Forms.PictureBox();
+            this.Hearts4 = new System.Windows.Forms.PictureBox();
+            this.Hearts3 = new System.Windows.Forms.PictureBox();
+            this.Hearts2 = new System.Windows.Forms.PictureBox();
             this.Hearts1 = new System.Windows.Forms.PictureBox();
             this.Something = new System.Windows.Forms.PictureBox();
             this.ElfPic = new System.Windows.Forms.PictureBox();
             this.Frame = new System.Windows.Forms.PictureBox();
             this.Background = new System.Windows.Forms.PictureBox();
-            this.Hearts2 = new System.Windows.Forms.PictureBox();
-            this.Hearts3 = new System.Windows.Forms.PictureBox();
-            this.Hearts4 = new System.Windows.Forms.PictureBox();
-            this.Hearts5 = new System.Windows.Forms.PictureBox();
+            this.Waiter = new System.Windows.Forms.Timer(this.components);
+            this.BossZhivot = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.Hearts5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Hearts4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Hearts3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Hearts2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Hearts1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Something)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ElfPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Frame)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Background)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Hearts2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Hearts3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Hearts4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Hearts5)).BeginInit();
             this.SuspendLayout();
             // 
             // EnemiesMove
@@ -154,6 +158,52 @@
             this.MagicStaff.Interval = 5;
             this.MagicStaff.Tick += new System.EventHandler(this.MagicStaff_Tick);
             // 
+            // WizardEvilScene
+            // 
+            this.WizardEvilScene.Interval = 5;
+            this.WizardEvilScene.Tick += new System.EventHandler(this.WizarsScene_Tick);
+            // 
+            // WizardShoot
+            // 
+            this.WizardShoot.Interval = 850;
+            this.WizardShoot.Tick += new System.EventHandler(this.WizardShoot_Tick);
+            // 
+            // Hearts5
+            // 
+            this.Hearts5.Location = new System.Drawing.Point(370, 1);
+            this.Hearts5.Name = "Hearts5";
+            this.Hearts5.Size = new System.Drawing.Size(63, 50);
+            this.Hearts5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.Hearts5.TabIndex = 13;
+            this.Hearts5.TabStop = false;
+            // 
+            // Hearts4
+            // 
+            this.Hearts4.Location = new System.Drawing.Point(297, 1);
+            this.Hearts4.Name = "Hearts4";
+            this.Hearts4.Size = new System.Drawing.Size(63, 50);
+            this.Hearts4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.Hearts4.TabIndex = 12;
+            this.Hearts4.TabStop = false;
+            // 
+            // Hearts3
+            // 
+            this.Hearts3.Location = new System.Drawing.Point(224, 1);
+            this.Hearts3.Name = "Hearts3";
+            this.Hearts3.Size = new System.Drawing.Size(63, 50);
+            this.Hearts3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.Hearts3.TabIndex = 11;
+            this.Hearts3.TabStop = false;
+            // 
+            // Hearts2
+            // 
+            this.Hearts2.Location = new System.Drawing.Point(151, 1);
+            this.Hearts2.Name = "Hearts2";
+            this.Hearts2.Size = new System.Drawing.Size(63, 50);
+            this.Hearts2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.Hearts2.TabIndex = 10;
+            this.Hearts2.TabStop = false;
+            // 
             // Hearts1
             // 
             this.Hearts1.Location = new System.Drawing.Point(80, 1);
@@ -200,41 +250,22 @@
             this.Background.TabIndex = 8;
             this.Background.TabStop = false;
             // 
-            // Hearts2
+            // Waiter
             // 
-            this.Hearts2.Location = new System.Drawing.Point(150, 1);
-            this.Hearts2.Name = "Hearts2";
-            this.Hearts2.Size = new System.Drawing.Size(63, 50);
-            this.Hearts2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.Hearts2.TabIndex = 10;
-            this.Hearts2.TabStop = false;
+            this.Waiter.Tick += new System.EventHandler(this.Waiter_Tick);
             // 
-            // Hearts3
+            // BossZhivot
             // 
-            this.Hearts3.Location = new System.Drawing.Point(221, 1);
-            this.Hearts3.Name = "Hearts3";
-            this.Hearts3.Size = new System.Drawing.Size(63, 50);
-            this.Hearts3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.Hearts3.TabIndex = 11;
-            this.Hearts3.TabStop = false;
-            // 
-            // Hearts4
-            // 
-            this.Hearts4.Location = new System.Drawing.Point(292, 1);
-            this.Hearts4.Name = "Hearts4";
-            this.Hearts4.Size = new System.Drawing.Size(63, 50);
-            this.Hearts4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.Hearts4.TabIndex = 12;
-            this.Hearts4.TabStop = false;
-            // 
-            // Hearts5
-            // 
-            this.Hearts5.Location = new System.Drawing.Point(363, 1);
-            this.Hearts5.Name = "Hearts5";
-            this.Hearts5.Size = new System.Drawing.Size(63, 50);
-            this.Hearts5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.Hearts5.TabIndex = 13;
-            this.Hearts5.TabStop = false;
+            this.BossZhivot.AutoSize = true;
+            this.BossZhivot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(44)))), ((int)(((byte)(9)))));
+            this.BossZhivot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BossZhivot.ForeColor = System.Drawing.Color.Gold;
+            this.BossZhivot.Location = new System.Drawing.Point(4, 57);
+            this.BossZhivot.Name = "BossZhivot";
+            this.BossZhivot.Size = new System.Drawing.Size(74, 32);
+            this.BossZhivot.TabIndex = 14;
+            this.BossZhivot.Text = "Life:";
+            this.BossZhivot.Visible = false;
             // 
             // Form1
             // 
@@ -242,6 +273,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(130)))));
             this.ClientSize = new System.Drawing.Size(878, 944);
+            this.Controls.Add(this.BossZhivot);
             this.Controls.Add(this.Hearts5);
             this.Controls.Add(this.Hearts4);
             this.Controls.Add(this.Hearts3);
@@ -260,15 +292,15 @@
             this.Text = "Form1";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
+            ((System.ComponentModel.ISupportInitialize)(this.Hearts5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Hearts4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Hearts3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Hearts2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Hearts1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Something)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ElfPic)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Frame)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Background)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Hearts2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Hearts3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Hearts4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Hearts5)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -300,6 +332,10 @@
         private System.Windows.Forms.PictureBox Hearts3;
         private System.Windows.Forms.PictureBox Hearts4;
         private System.Windows.Forms.PictureBox Hearts5;
+        private System.Windows.Forms.Timer WizardEvilScene;
+        private System.Windows.Forms.Timer WizardShoot;
+        private System.Windows.Forms.Timer Waiter;
+        private System.Windows.Forms.Label BossZhivot;
     }
 }
 

@@ -26,9 +26,15 @@ namespace Elfs_VS_Goblins__
         PictureBox Wizard = new PictureBox();
         PictureBox Bow = new PictureBox();
         PictureBox Staff = new PictureBox();
+        PictureBox Go = new PictureBox();
         Elf Igrach = new Elf();
 
+        EvilWizard Boss = new EvilWizard(120,50);
+
+        int Wait = 0;
+
         int SceneBreak = 0;
+        bool EndScene;
         int level = -2;
         bool LevelEnded = false;
 
@@ -45,13 +51,14 @@ namespace Elfs_VS_Goblins__
 
         List <GoblinProjectile> Kamuni = new List<GoblinProjectile>();
         List <DemonProjectile> Ogun = new List<DemonProjectile>();
+        List<WizardProjectile> ZlaMagiya = new List<WizardProjectile>();
 
-        PictureBox Pravila = new PictureBox(); //obyasnyavat kakvo pravyat chudovishtata
+        //PictureBox Pravila = new PictureBox(); //obyasnyavat kakvo pravyat chudovishtata
                                                //mozhe be magyosnikut go kazva
-
+        
         int XPlevel1 = 30; // vremenna st-st // kolko?
         int XPlevel2 = 60; // vremenno
-        int XPlevel3;
+        int XPlevel3 = 90;
 
         Point Default = new Point(250, 500);
         Point A  =new Point(50,10);
@@ -63,8 +70,8 @@ namespace Elfs_VS_Goblins__
         {
             public int speed = 10;
             public PictureBox Pic;
-            protected int x = 6;
-            protected int y = 15;
+            protected int x = 8;
+            protected int y = 20;
             public ElfProjectile()
             {
                 Pic = new PictureBox();
@@ -74,7 +81,7 @@ namespace Elfs_VS_Goblins__
         }
         public class GoblinProjectile
         {
-            public int speed = 10;
+            public int speed = 11;
             public PictureBox Pic;
             private int x = 10;
             private int y = 10;
@@ -82,7 +89,7 @@ namespace Elfs_VS_Goblins__
             {
                 Pic = new PictureBox();
                 Pic.Size = new Size(x, y);
-                Pic.BackColor = Color.Gray;
+                Pic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
         public class DemonProjectile
@@ -95,7 +102,21 @@ namespace Elfs_VS_Goblins__
             {
                 Pic = new PictureBox();
                 Pic.Size = new Size(x, y);
-                Pic.BackColor = Color.Red;
+                Pic.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+        }
+        public class WizardProjectile
+        {
+            public int speed = 15;
+            public PictureBox Pic;
+            private int x = 10;
+            private int y = 10;
+            public WizardProjectile()
+            {
+                Pic = new PictureBox();
+                Pic.Size = new Size(x, y);
+                Pic.SizeMode = PictureBoxSizeMode.StretchImage;
+                Pic.BackColor = Color.Blue;
             }
         }
         public class Apple
@@ -106,14 +127,14 @@ namespace Elfs_VS_Goblins__
             public PictureBox Pic;
             public Apple(int a, int b)
             {
-                x = 80;
-                y = 80;
+                x = 60;
+                y = 60;
                 Speed = 2;
                 Pic = new PictureBox();
                 Pic.Location = new Point(a, b);
                 Pic.Size = new Size(x, y);
                 Pic.SizeMode = PictureBoxSizeMode.StretchImage;
-                Pic.Image = Image.FromFile("sprites/apple-export.gif");
+                Pic.Image = Image.FromFile("sprites/apple2.gif");
             }
         }
         public class Enemy
@@ -193,10 +214,24 @@ namespace Elfs_VS_Goblins__
             public int Health = 5;
             public PictureBox Pic;
             public int speed = 4;
-            public int ShootingSpeed;
             public int XP;
         }
-        
+        public class EvilWizard
+        {
+            public int Health;
+            public PictureBox Pic;
+            public EvilWizard(int a, int b)
+            {
+                Health = 120;
+                Pic = new PictureBox();
+                Pic.Location = new Point(a, b);
+                Pic.Size = new Size(300,180);
+                Pic.SizeMode = PictureBoxSizeMode.StretchImage;
+                Pic.Image = Image.FromFile("PlaceHolders/EVILWIZARD.png");
+                Pic.Visible = false;
+            }
+        }
+
 
         public Form1()
         {
@@ -281,7 +316,6 @@ namespace Elfs_VS_Goblins__
             {
                 Igrach.Pic.Location = Default;
                 GameStart();
-                level++;
             }
         }
 
@@ -384,23 +418,41 @@ namespace Elfs_VS_Goblins__
                 if (WizardTalk.Visible)
                 {
                     speak++;
-                    if (speak == 1)
+                    if (speak == 1&&Wait ==0)
                     {
                         WizardTalk.Image = Image.FromFile("sprites/wizard2.png");
                     }
-                    else if(speak ==2)
+                    else if(speak ==2&& Wait == 0)
                     {
                         WizardTalk.Image = Image.FromFile("sprites/wizard3.png");
                     }
-                    else if (speak == 3)
+                    else if (speak == 3 && Wait == 0)
                     {
                         WizardTalk.Image = Image.FromFile("sprites/wizard4.png");
                     }
-                    else if (speak == 4)
+                    else if (speak == 4 && Wait == 0)
                     {
                         WizardTalk.Visible = false;
                         Wizard.Dispose();
                         stoped = false;
+                    }
+                    if(speak == 5 && Wait >0)
+                    {
+                        WizardTalk.Image = Image.FromFile("PlaceHolders/EvilWizard2.png");
+                    }
+                    else if (speak ==6&& Wait >0)
+                    {
+                        WizardTalk.Visible = false;
+                        stoped = false;
+
+                        BossZhivot.Visible = true;
+                        XPbar.Value = 100;
+                        CreateMagic();
+                        level++;
+                        SceneBreak = 0;
+                        ElfProjectileMove.Start();
+                        WizardShoot.Start();
+                        
                     }
                 }
             }
@@ -428,6 +480,7 @@ namespace Elfs_VS_Goblins__
 
         private void ElfProjectileMove_Tick(object sender, EventArgs e)
         {
+            
             for (int i = 0; i < Magiya.Length; i++)
             {
                 if (Magiya[i].Pic.Top > 0)
@@ -438,24 +491,28 @@ namespace Elfs_VS_Goblins__
                 else
                 {
                     Magiya[i].Pic.Visible = false;
-                    int a = rand.Next(0,3);
-                    switch(a)
+                    if (level < 3)
                     {
-                        case 0:
-                            Magiya[i].Pic.Image = Image.FromFile("sprites/arrow1.png");
-                            break;
-                        case 1:
-                            Magiya[i].Pic.Image = Image.FromFile("sprites/arrow2.png");
-                            break;
-                        case 2:
-                            Magiya[i].Pic.Image = Image.FromFile("sprites/arrow3.png");
-                            break;
+                        int a = rand.Next(0, 3);
+                        switch (a)
+                        {
+                            case 0:
+                                Magiya[i].Pic.Image = Image.FromFile("sprites/arrow1.png");
+                                break;
+                            case 1:
+                                Magiya[i].Pic.Image = Image.FromFile("sprites/arrow2.png");
+                                break;
+                            case 2:
+                                Magiya[i].Pic.Image = Image.FromFile("sprites/arrow3.png");
+                                break;
+                        }
                     }
                     Magiya[i].Pic.Location = new Point(Igrach.Pic.Location.X + 20, Igrach.Pic.Location.Y + 45 - i * 10);
                 }
             }
             Collisions();
             StaffScene();
+            WizardScene();
             CoolDown++;
             if(CoolDown>10)
                 CollisionsElf();
@@ -487,6 +544,16 @@ namespace Elfs_VS_Goblins__
                     Ogun.RemoveAt(i);
                 }
             }
+            for (int i = ZlaMagiya.Count - 1; i >= 0; i--)
+            {
+                ZlaMagiya[i].Pic.Top += ZlaMagiya[i].speed;
+
+                if (ZlaMagiya[i].Pic.Top >= this.Height)
+                {
+                    ZlaMagiya[i].Pic.Dispose();
+                    ZlaMagiya.RemoveAt(i);
+                }
+            }
         }
         private void EnemyShoot_Tick(object sender, EventArgs e) //GoblinShoot
         {
@@ -496,6 +563,12 @@ namespace Elfs_VS_Goblins__
                 var x = new GoblinProjectile();
                 x.Pic.Location = new Point(Goblini[j].Pic.Location.X + 20, Goblini[j].Pic.Location.Y + 80);
                 this.Controls.Add(x.Pic);
+                if (level == 1)
+                    x.Pic.BackColor = Color.Gray;
+                else if (level == 2)
+                    x.Pic.Image = Image.FromFile("sprites/foxy_attack.gif");
+                else if(level == 3)
+                    x.Pic.BackColor= Color.Gray;
                 Napred(x.Pic);
                 Kamuni.Add(x);
             }
@@ -508,6 +581,12 @@ namespace Elfs_VS_Goblins__
                 var x = new DemonProjectile();
                 x.Pic.Location = new Point(Demoni[k].Pic.Location.X + 35, Demoni[k].Pic.Location.Y + 80);
                 this.Controls.Add(x.Pic);
+                if (level == 1)
+                    x.Pic.BackColor = Color.Red;
+                else if (level == 2)
+                    x.Pic.BackColor = Color.Black;
+                else if (level == 3)
+                    x.Pic.Image = Image.FromFile("sprites/fireball.gif");
                 Napred(x.Pic);
                 Ogun.Add(x);
             }
@@ -574,6 +653,16 @@ namespace Elfs_VS_Goblins__
                         }
                     }
                 }
+                if (Boss.Pic.Visible)
+                {
+                    if (Magiya[j].Pic.Visible && Magiya[j].Pic.Bounds.IntersectsWith(Boss.Pic.Bounds))
+                    {
+                        Boss.Health--;
+                        Magiya[j].Pic.Visible = false;
+                        Magiya[j].Pic.Location = new Point(Igrach.Pic.Location.X + 25, Igrach.Pic.Location.Y + 45 - j * 10);
+                        XPUpdate();
+                    }
+                }
             }
 
             for (int i = Yabulki.Count - 1; i >= 0; i--)
@@ -638,6 +727,21 @@ namespace Elfs_VS_Goblins__
                     }
                 }
             }
+            for (int i = ZlaMagiya.Count - 1; i >= 0; i--)
+            {
+                WizardProjectile z = ZlaMagiya[i];
+                if (Igrach.Pic.Bounds.IntersectsWith(z.Pic.Bounds))
+                {
+                    Igrach.Health--;
+                    HeartUpdate();
+                    CoolDown = 0;
+                    Igrach.Pic.Location = Default;
+                    if (Igrach.Health == 0)
+                    {
+                        over = true;
+                    }
+                }
+            }
         }
         private void GameStart()
         {
@@ -650,7 +754,7 @@ namespace Elfs_VS_Goblins__
             EnemyProjectileMove.Start();
 
             stoped  = false;
-            level++;
+            level=1;
             label2.Visible = true;
             label3.Text = level.ToString();
             label3.Visible = true;
@@ -729,7 +833,27 @@ namespace Elfs_VS_Goblins__
             }
             else if (level == 3)
             {
-
+                for (int i = 0; i < 5; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            Type3(A);
+                            break;
+                        case 1:
+                            Type3(B);
+                            break;
+                        case 2:
+                            Type3(C);
+                            break;
+                        case 3:
+                            Type3(D);
+                            break;
+                        case 4:
+                            Type3(E);
+                            break;
+                    }
+                }
             }
         }
         private void Type1(Point P) //nivo 1
@@ -817,23 +941,23 @@ namespace Elfs_VS_Goblins__
                     break;
             }
         }
-        private void Type3 (Point P) // v momenta e sushtoto kato 2 i ne e izpolzvano
+        private void Type3 (Point P) // nivo 3
         {
-            int a = rand.Next(0, 10); // mozhe da se promeni ratio-to
+            int a = rand.Next(0, 11); // mozhe da se promeni ratio-to
             switch (a)
             {
                 // 0  prazni
                 case 1:
                 case 2:
                 case 3:
-                case 4:
                     var g = new Goblin(P.X, P.Y);
-                    g.Pic.Image = Image.FromFile("sprites/foxy.gif");
+                    //g.Pic.Image = Image.FromFile("sprites/foxy.gif");
                     Chudovishta.Add(g);
                     Goblini.Add(g);
                     this.Controls.Add(g.Pic);
                     Napred(g.Pic);
                     break;
+                case 4:
                 case 5:
                     var t = new Tank(P.X, P.Y);
                     // kartinka
@@ -846,8 +970,10 @@ namespace Elfs_VS_Goblins__
                 case 6:
                 case 7:
                 case 8:
+                case 11:
                     var d = new Demon(P.X, P.Y);
-                    // kartinka
+                    d.Pic.Size = new Size(60,96);
+                    d.Pic.Image = Image.FromFile("sprites/heartdeamon.gif");
                     Chudovishta.Add(d);
                     Demoni.Add(d);
                     this.Controls.Add(d.Pic);
@@ -973,7 +1099,6 @@ namespace Elfs_VS_Goblins__
                 {
                     XPbar.Value = 100;
                     EndOfLevel();
-                    
                 }
             }
             else if(level ==3)
@@ -982,8 +1107,18 @@ namespace Elfs_VS_Goblins__
                     XPbar.Value = (Igrach.XP * 100) / XPlevel3;
                 else
                 {
-                    //EndofLevel();
-                    //kartinka / cvyat
+                    XPbar.Value = 100;
+                    EndOfLevel();
+                }
+            }
+            else if(level ==4)
+            {
+                if (XPbar.Value > (100 / Boss.Health))
+                    XPbar.Value -= 100 / Boss.Health;
+                else
+                {
+                    XPbar.Value = 0;
+                    GameWon();
                 }
             }
         }
@@ -995,10 +1130,14 @@ namespace Elfs_VS_Goblins__
             {
                 SceneBreak = 1;
             }
+            if(level==3&&SceneBreak==0)
+            {
+                SceneBreak = 1;
+            }
         }
         private void StaffScene()
         {
-            if (Chudovishta.Count == 0 && Yabulki.Count == 0&&SceneBreak==1)
+            if (Chudovishta.Count == 0 && Yabulki.Count == 0&&LevelEnded&&level ==2)
             {
                 ElfProjectileMove.Stop();
                 for (int i = 0;i<Magiya.Length;i++)
@@ -1006,31 +1145,103 @@ namespace Elfs_VS_Goblins__
                     Magiya[i].Pic.Dispose();
                 }
                 MagicStaff.Start();
-                Staff.Location = new Point(200, 100);
+                Staff.Location = new Point(200, 200);
                 Staff.Size = new Size(70, 70);
                 Staff.SizeMode = PictureBoxSizeMode.StretchImage;
                 Staff.Image = Image.FromFile("sprites/wand.gif");
                 this.Controls.Add(Staff);
+                Staff.Parent = Background;
                 Staff.BringToFront();
             }
         }
+        
         private void MagicStaff_Tick(object sender, EventArgs e)
         {
-
             if (Igrach.Pic.Bounds.IntersectsWith(Staff.Bounds))
             {
                 Staff.Dispose();
                 Igrach.Pic.Image = Image.FromFile("sprites/melf-wand2.gif");
                 SceneBreak++;
+                EndScene = true;
             }
-            if (Igrach.Pic.Top <= -30 && SceneBreak == 2)
+            if (Igrach.Pic.Top <= 50 && EndScene)
             {
                 SceneBreak = 0;
                 Igrach.Pic.Location = Default;
+                CreateMagic();
                 ElfProjectileMove.Start();
                 CheckIfLevelEnded();
             }
-            
+        }
+        private void WizardScene()
+        {
+            if (Chudovishta.Count == 0 && Yabulki.Count == 0 && LevelEnded&& level==3)
+            {
+                ElfProjectileMove.Stop();
+                for (int i = 0; i < Magiya.Length; i++)
+                {
+                    Magiya[i].Pic.Dispose();
+                }
+                
+                Go.Location = new Point(100,200);
+                Go.SizeMode = PictureBoxSizeMode.StretchImage;
+                Go.Size = new Size(110, 140);
+                Go.Image = Image.FromFile("PlaceHolders/Napred.png");
+                this.Controls.Add(Go);
+                Go.BringToFront();
+                Go.Show();
+
+                WizardEvilScene.Start(); //WizarsScene
+                Boss.Pic.Location = new Point(50, 50);
+                Staff.Size = new Size(570, 380);
+                Staff.SizeMode = PictureBoxSizeMode.StretchImage;
+                Staff.Image = Image.FromFile("PlaceHolders/EVILWIZARD.png");
+                Boss.Pic.Visible = false;
+                this.Controls.Add(Boss.Pic);
+                Boss.Pic.BringToFront();
+            }
+        }
+        private void WizarsScene_Tick(object sender, EventArgs e)//WizardEvilScene
+        {
+            if(Igrach.Pic.Top<=50)
+            {
+                Go.Dispose();
+                Igrach.Pic.Location = new Point (Default.X, Default.Y-100);
+                this.Controls.Add(Boss.Pic);
+                Boss.Pic.Visible = true;
+                Boss.Pic.BringToFront();
+                Waiter.Start();
+            }
+            if(Wait==5)
+            {
+                Waiter.Stop();
+                stoped = true;
+                WizardTalk.Image = Image.FromFile("PlaceHolders/EvilWizard1.png");
+                WizardTalk.Visible = true;
+                WizardTalk.BringToFront();
+                WizardEvilScene.Stop();
+            }
+        }
+
+        private void WizardShoot_Tick(object sender, EventArgs e)
+        {
+            int a = rand.Next(50,550);
+            var z = new WizardProjectile();
+            z.Pic.Location = new Point(a, 250);
+            this.Controls.Add(z.Pic);
+            z.Pic.BringToFront();
+            ZlaMagiya.Add(z);
+        }
+        private void CreateMagic()
+        {
+            for (int i = 0; i < Magiya.Length; i++)
+            {
+                Magiya[i] = new ElfProjectile();
+                this.Controls.Add(Magiya[i].Pic);
+                Magiya[i].Pic.BringToFront();
+                Magiya[i].Pic.Size = new Size(14,16);
+                Magiya[i].Pic.Image = Image.FromFile("sprites/magic.gif");
+            }
         }
         private void CheckIfLevelEnded()
         {
@@ -1055,7 +1266,7 @@ namespace Elfs_VS_Goblins__
             }
             else if(level==3)
             {
-                
+                BackColor = Color.LightSalmon;
             }
         }
 
@@ -1066,6 +1277,7 @@ namespace Elfs_VS_Goblins__
             EnemyCreate.Stop();
             GoblinShoot.Stop();
             DemonShoot.Stop();
+            WizardShoot.Stop();
             EnemyProjectileMove.Stop();
             stoped = true;
 
@@ -1076,6 +1288,9 @@ namespace Elfs_VS_Goblins__
             Something.Visible = true;
         }
 
-        
+        private void Waiter_Tick(object sender, EventArgs e)
+        {
+            Wait++;
+        }
     }
 }
